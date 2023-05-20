@@ -3,8 +3,13 @@ const mongoose = require("mongoose");
 const bookSchema = mongoose.Schema({
 	title: { type: String, required: true },
 	author: { type: String, required: true },
-	description: { type: String },
+	category: { type: String },
 	selectedFile: { type: String },
+	quantity: {
+		type: Number,
+		required: true,
+	},
+	borrowedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 	createdAt: {
 		type: Date,
 		default: new Date(),

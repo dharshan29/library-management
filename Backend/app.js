@@ -3,9 +3,13 @@ const app = express();
 const mongoose = require("mongoose");
 
 require("dotenv/config");
+const authJwt = require("./helpers/jwt");
+const errorHandler = require("./helpers/error-handler");
 
 // middleware
 app.use(express.json());
+app.use(authJwt());
+app.use(errorHandler);
 
 // Routes
 const usersRoutes = require("./routes/users");
