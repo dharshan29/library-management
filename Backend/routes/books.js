@@ -56,19 +56,23 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-	let book = new Book({
-		title: req.body.title,
-		author: req.body.author,
-		description: req.body.description,
-		selectedFile: req.body.selectedFile,
-		quantity: req.body.quantity,
-		borrowedBy: req.body.borrowedBy,
-	});
-	book = await book.save();
+	try {
+		let book = new Book({
+			title: req.body.title,
+			author: req.body.author,
+			category: req.body.category,
+			selectedFile: req.body.selectedFile,
+			quantity: req.body.quantity,
+			borrowedBy: req.body.borrowedBy,
+		});
+		book = await book.save();
 
-	if (!book) return res.status(404).send("the Book cannot be created!");
+		if (!book) return res.status(404).send("the Book cannot be created!");
 
-	res.status(200).send(book);
+		res.status(200).send(book);
+	} catch (error) {
+		res.status(500).json({ message: "Server Error" });
+	}
 });
 
 router.post("/borrow", async (req, res) => {
@@ -145,8 +149,8 @@ router.post("/return", async (req, res) => {
 	}
 });
 
-router.post("/borrowed-books", async (req, res) => {
-	const { userId } = req.body;
+router.get("/borrowed-books/:userId", async (req, res) => {
+	const { userId } = req.params;
 	try {
 		const user = await User.findById(userId);
 
@@ -154,7 +158,7 @@ router.post("/borrowed-books", async (req, res) => {
 			return res.status(404).json({ message: "User not found" });
 		}
 		const borrowedBooks = await Book.find({ borrowedBy: userId }).select(
-			"title author _id"
+			"title author _id selectedFile"
 		);
 
 		res.status(200).json({ borrowedBooks });

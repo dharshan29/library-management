@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 require("dotenv/config");
 const authJwt = require("./helpers/jwt");
@@ -8,6 +9,7 @@ const errorHandler = require("./helpers/error-handler");
 
 // middleware
 app.use(express.json());
+app.use(cors());
 app.use(authJwt());
 app.use(errorHandler);
 
@@ -29,6 +31,6 @@ mongoose
 		console.log(err);
 	});
 
-app.listen(3000, () => {
-	console.log("server is running at localhost:3000");
+app.listen(3100, () => {
+	console.log("server is running at localhost:3100");
 });

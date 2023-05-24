@@ -1,7 +1,20 @@
-import { AppBar, Button, Toolbar, Typography } from "@mui/material";
 import React from "react";
+import {
+	AppBar,
+	Avatar,
+	Button,
+	Stack,
+	Toolbar,
+	Typography,
+} from "@mui/material";
+import { deepOrange } from "@mui/material/colors";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+	const user = JSON.parse(localStorage.getItem("profile"));
+
+	const navigate = useNavigate();
+
 	return (
 		<AppBar position="static">
 			<Toolbar sx={{ justifyContent: "space-between" }}>
@@ -22,9 +35,37 @@ const Header = () => {
 				>
 					Library Management System
 				</Typography>
-				<Button color="error" variant="contained">
-					Login
-				</Button>
+				<Stack flexDirection="row" gap={1}>
+					{user ? (
+						<Avatar
+							sx={{ bgcolor: deepOrange[500], textTransform: "capitalize" }}
+						>
+							{user.user[0]}
+						</Avatar>
+					) : (
+						<Button
+							color="error"
+							variant="contained"
+							onClick={() => navigate("/login")}
+						>
+							Login
+						</Button>
+					)}
+					{user && (
+						<Button
+							color="error"
+							variant="contained"
+							onClick={() => {
+								localStorage.clear();
+								setTimeout(() => {
+									navigate("/");
+								}, 1000);
+							}}
+						>
+							Logout
+						</Button>
+					)}
+				</Stack>
 			</Toolbar>
 		</AppBar>
 	);
